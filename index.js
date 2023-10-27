@@ -50,6 +50,28 @@ const run = async () => {
       const bookings = await bookingsCollection.insertOne(booking);
       res.send(bookings);
     });
+    // delete booking
+    app.delete("/bookings/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingsCollection.deleteOne(query);
+      res.send(result);
+      console.log(result);
+    });
+    // patch
+    app.patch("/bookings/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const options = req.body;
+      console.log(options);
+      const updateDoc = {
+        $set: {
+          status: options.status,
+        },
+      };
+      const result = await bookingsCollection.updateOne(query, updateDoc);
+      res.send(result);
+    });
   } catch (error) {
     console.log(error.message);
   }
